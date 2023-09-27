@@ -74,3 +74,9 @@ install tailwind
 [https://tailwindcss.com/docs/guides/create-react-app](https://tailwindcss.com/docs/guides/create-react-app)
 
 login form https://developer.okta.com/blog/2018/10/31/jwts-with-java
+https://jasonwatmore.com/post/2022/06/15/react-18-redux-jwt-authentication-example-tutorial
+
+pagination
+https://www.scaler.com/topics/react/pagination-in-react/
+
+https://www.npmjs.com/package/react-paginate
