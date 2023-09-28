@@ -5,30 +5,26 @@ import { getTable } from '../../services/apiCertTable';
 import TableRow from './TableRow';
 import PageSizeSelector from './PageSizeSelector';
 
+import FirstRowCell, { firstRowStyle } from './FirstRowCell';
+
 function CertTable() {
   const { content, number, totalPages } = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const firstRowStyle = 'bg-stone-300 font-semibold p-2';
 
   function handlePageChange(e) {
     const paramsObj = Object.fromEntries(searchParams);
     setSearchParams({ ...paramsObj, page: e.selected });
   }
 
-  function handlePageSizeChange(e) {
-    const paramsObj = Object.fromEntries(searchParams);
-    setSearchParams({ ...paramsObj, size: e.target.value });
-  }
-
   return (
     <>
       <div className="grid grid-cols-[1fr_1fr_2fr_2fr_1fr_2fr]  divide-x-2 divide-y-2 border-4">
-        <div className={firstRowStyle}>DateTime</div>
-        <div className={firstRowStyle}>Title</div>
+        <FirstRowCell title="DateTime" fieldName="createDate" />
+        <FirstRowCell title="Title" fieldName="name" />
         <div className={firstRowStyle}>Tags</div>
-        <div className={firstRowStyle}>Decription</div>
-        <div className={`${firstRowStyle} text-center`}>Price</div>
+        <FirstRowCell title="Description" fieldName="description" />
+        <FirstRowCell title="Price" fieldName="price" addStyle="text-center" />
+
         <div className={firstRowStyle}> Actions</div>
         {content.map((row) => (
           <TableRow tableRow={row} key={row.id} />
@@ -51,7 +47,7 @@ function CertTable() {
           nextClassName="p-2 border-2 hover:bg-blue-500"
           previousClassName="p-2 border-2 hover:bg-blue-500"
         />
-        <PageSizeSelector onChange={handlePageSizeChange} />
+        <PageSizeSelector totalPages={totalPages} />
       </div>
     </>
   );
@@ -64,6 +60,7 @@ export async function loader({ request }) {
   const sorting = url.searchParams.get('sort');
 
   const table = await getTable(pageNum, pageSize, sorting);
+
   return table;
 }
 

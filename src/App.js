@@ -3,6 +3,7 @@ import AppLayout from './ui/AppLayout';
 import Login from './features/user/Login';
 import MainScreen from './ui/MainScreen';
 import { loader as tableLoader } from './features/maintable/CertTable';
+import ErrorBanner from './features/error/ErrorBanner';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
         path: 'certs',
         element: <MainScreen />,
         loader: tableLoader,
+        errorElement: <ErrorBanner />,
       },
     ],
   },

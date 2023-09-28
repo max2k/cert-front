@@ -79,4 +79,4 @@ https://jasonwatmore.com/post/2022/06/15/react-18-redux-jwt-authentication-examp
 pagination
 https://www.scaler.com/topics/react/pagination-in-react/
 
-https://www.npmjs.com/package/react-paginate
+https://github.com/AdeleD/react-paginate

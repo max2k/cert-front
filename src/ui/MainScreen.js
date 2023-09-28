@@ -1,10 +1,10 @@
 import CertTable from '../features/maintable/CertTable';
+import SearchElement from '../features/search/SearchElement';
 
 function MainScreen() {
   return (
     <div className="flex flex-col justify-center">
-      <div>This is error place</div>
-      <div>This is search string</div>
+      <SearchElement />
       <CertTable />
     </div>
   );
