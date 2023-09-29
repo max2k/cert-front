@@ -1,6 +1,5 @@
 function Button({ addStyling, onClick, children }) {
-  const baseStyle =
-    'mx-2 my-2 rounded-md bg-blue-800 px-2 py-2 font-semibold text-blue-100';
+  const baseStyle = 'm-2 rounded-md bg-blue-800 p-2 font-semibold';
   const buttonStyle = baseStyle + ' ' + addStyling;
 
   if (onClick)

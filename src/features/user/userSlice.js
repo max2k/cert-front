@@ -10,9 +10,9 @@ const initialState = {
 
 export const makeLogin = createAsyncThunk(
   'user/doLogin',
-  async function (reqData) {
+  async function ({ reqData, navigateTo }) {
     const loginRes = await userLogin(reqData);
-
+    navigateTo();
     return loginRes;
   },
 );
@@ -23,6 +23,10 @@ const userSlice = createSlice({
   reducers: {
     updateName(state, action) {
       state.userName = action.payLoad;
+    },
+    logout(state, action) {
+      state.userName = '';
+      state.jwtToken = '';
     },
   },
   extraReducers: (builder) =>
@@ -36,7 +40,6 @@ const userSlice = createSlice({
         state.userName = action.payload.fullName;
         state.userLogin = action.payload.userLogin;
         state.status = 'idle';
-        console.log('data recieved:' + action.payload.fullName);
       })
       // eslint-disable-next-line no-unused-vars
       .addCase(makeLogin.rejected, (state, action) => {
@@ -45,6 +48,6 @@ const userSlice = createSlice({
       }),
 });
 
-export const { updateName } = userSlice.actions;
+export const { updateName, logout } = userSlice.actions;
 
 export default userSlice.reducer;

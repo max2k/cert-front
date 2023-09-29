@@ -5,7 +5,9 @@ import { getNextDirection, getSortDirectonObj } from '../../utils/helpers';
 export const firstRowStyle = 'bg-stone-300 font-semibold p-2';
 
 function FirstRowCell({ title, fieldName, addStyle }) {
-  const style = firstRowStyle + ' active:bg-stone-400 ' + addStyle;
+  const style =
+    'bg-stone-300 font-semibold p-2 active:bg-stone-400 hover:bg-stone-200' +
+    addStyle;
 
   const [searchParams, setSearchParams] = useSearchParams();
 

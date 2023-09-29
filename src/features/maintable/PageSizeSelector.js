@@ -8,15 +8,17 @@ function PageSizeSelector({ totalPages }) {
   const pageSize = searchParams.get('size');
 
   function handlePageSizeChange(e) {
-    const paramsObj = Object.fromEntries(searchParams);
+    let paramsObj = Object.fromEntries(searchParams);
     const currPage = searchParams.get('page');
     const newPageSize = e.target.value;
     const firstElement = currPage * pageSize;
 
     const newPageNum = Math.floor(firstElement / newPageSize);
 
-    if (currPage && currPage)
-      setSearchParams({ ...paramsObj, size: newPageSize, page: newPageNum });
+    paramsObj = { ...paramsObj, size: newPageSize };
+    if (currPage) paramsObj = { ...paramsObj, page: newPageNum };
+
+    setSearchParams(paramsObj);
   }
 
   return (

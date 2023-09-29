@@ -37,3 +37,25 @@ export function getNextDirection(fieldStr, directon) {
   if (directon === 'desc') return '';
   return fieldStr + ',asc';
 }
+
+export function getSearchStrAndTags(message) {
+  const regex = /#\((.*?)\)/g;
+
+  const matches = [];
+  let match;
+  while ((match = regex.exec(message)) !== null) {
+    matches.push(match[1]);
+  }
+  const searchStr = message.replace(regex, '').trim();
+  return { searchStr, tagArr: matches };
+}
+
+export function validateEmail(input) {
+  var validRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  return input.match(validRegex) && input.length < 30;
+}
+
+export function validatePassword(input) {
+  return input.length > 3 && input.length < 30;
+}
