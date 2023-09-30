@@ -9,7 +9,7 @@ export async function getTable(
 ) {
   const sortStr = sorting ? `&sort=${sorting}` : '';
   const subStr = nameDescSubStr ? `&substr=${nameDescSubStr}` : '';
-  console.log(tags, tags.length);
+
   const tagsStr = tags?.length > 0 ? '&tags=' + tags.join('&tags=') : '';
 
   if (!page || page < 0) page = 0;

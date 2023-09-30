@@ -1,6 +1,15 @@
 import { HiXMark } from 'react-icons/hi2';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearError } from '../features/error/errorSlice';
 
-function ErrorBanner({ errorMessage, onClose }) {
+function ErrorBanner() {
+  const dispatch = useDispatch();
+  const errorMessage = useSelector((state) => state.error.errorMessage);
+
+  function handleOnClose(e) {
+    dispatch(clearError());
+  }
+
   if (errorMessage === '') return <div></div>;
 
   return (
@@ -9,7 +18,7 @@ function ErrorBanner({ errorMessage, onClose }) {
       hidden="hidden"
     >
       <span>{errorMessage}</span>
-      <span className="hover:cursor-pointer" onClick={onClose}>
+      <span className="hover:cursor-pointer" onClick={handleOnClose}>
         <HiXMark />
       </span>
     </div>

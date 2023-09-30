@@ -6,12 +6,14 @@ import TableRow from './TableRow';
 import PageSizeSelector from './PageSizeSelector';
 
 import FirstRowCell, { firstRowStyle } from './FirstRowCell';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../error/errorSlice';
 
 function CertTable() {
   const { content, number, totalPages } = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const deletedIds = useSelector((state) => state.cert.deletedIds);
   const dispatch = useDispatch();
 
   function handlePageChange(e) {
@@ -30,9 +32,11 @@ function CertTable() {
         <FirstRowCell title="Price" fieldName="price" addStyle="text-center" />
 
         <div className={firstRowStyle}> Actions</div>
-        {content.map((row) => (
-          <TableRow tableRow={row} key={row.id} />
-        ))}
+        {content
+          .filter((row) => !deletedIds.includes(row.id))
+          .map((row) => (
+            <TableRow tableRow={row} key={row.id} />
+          ))}
       </div>
       <div className="grid grid-cols-[1fr_10fr_1fr] items-center">
         <div></div>

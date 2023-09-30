@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
+import ErrorBanner from './ErrorBanner';
 
 function AppLayout() {
   return (
@@ -7,6 +8,7 @@ function AppLayout() {
       <Header />
 
       <main className="mx-32">
+        <ErrorBanner />
         <Outlet />
       </main>
 

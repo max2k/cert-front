@@ -33,6 +33,7 @@ export async function userLogin(reqData) {
 export async function deleteCertApi(id, jwt) {
   const requestOptions = {
     method: 'DELETE',
+
     headers: {
       Authorization: 'Bearer ' + jwt,
     },

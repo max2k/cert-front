@@ -12,7 +12,6 @@ function FirstRowCell({ title, fieldName, addStyle }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   function handleSortChange(newSortOrder) {
-    console.log(newSortOrder);
     if (!newSortOrder && newSortOrder === '') {
       searchParams.delete('sort');
       setSearchParams(searchParams);

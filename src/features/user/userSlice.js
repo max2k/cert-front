@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { userLogin } from '../../services/apiGiftCert';
+import { setError } from '../error/errorSlice';
 
 const initialState = {
   userName: '',
@@ -10,10 +11,15 @@ const initialState = {
 
 export const makeLogin = createAsyncThunk(
   'user/doLogin',
-  async function ({ reqData, navigateTo }) {
-    const loginRes = await userLogin(reqData);
-    navigateTo();
-    return loginRes;
+  async function ({ reqData, navigateTo }, thunkAPI) {
+    try {
+      const loginRes = await userLogin(reqData);
+      navigateTo();
+      return loginRes;
+    } catch (error) {
+      thunkAPI.dispatch(setError('Login failed'));
+      throw error;
+    }
   },
 );
 
