@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { deleteCertApi } from '../../services/apiGiftCert';
+import { deleteCertApi, updateCertApi } from '../../services/apiGiftCert';
 import { setError } from '../error/errorSlice';
 
 export const deleteCert = createAsyncThunk(
   'cert/delete',
-  async function ({ certId, jwt }, thunkAPI) {
+  async function ({ certId }, thunkAPI) {
     try {
+      const jwt = thunkAPI.getState().user.jwtToken;
       await deleteCertApi(certId, jwt);
       return certId;
     } catch (error) {
@@ -15,12 +16,30 @@ export const deleteCert = createAsyncThunk(
       );
       throw Error('Deleting certificate failed');
     }
-    return { message: 'Certificate with id ' + certId + 'deleted' };
+  },
+);
+
+export const updateCert = createAsyncThunk(
+  'cert/update',
+  async function ({ certId, fields }, thunkAPI) {
+    try {
+      const jwt = thunkAPI.getState().user.jwtToken;
+      await updateCertApi(certId, fields, jwt);
+      return certId;
+    } catch (error) {
+      console.log(error);
+      thunkAPI.dispatch(
+        setError('Deleting failed with message:' + error.message),
+      );
+      throw Error('Deleting certificate failed');
+    }
   },
 );
 
 const initialState = {
   isDeleting: false,
+  isUpdating: false,
+  updateKey: 1,
   deletedIds: [],
   operationErrorMessage: '',
 };
@@ -31,6 +50,9 @@ const certSlice = createSlice({
   reducers: {
     clearDeletedIds(state, action) {
       state.deletedIds = [];
+    },
+    incUpdateKey(state, action) {
+      state.updateKey += 1;
     },
   },
   extraReducers: (builder) => {
@@ -47,10 +69,23 @@ const certSlice = createSlice({
         state.isDeleting = false;
         state.operationErrorMessage =
           'Deletion operation failed ' + action.error.message;
+      })
+      .addCase(updateCert.fulfilled, (state, action) => {
+        state.isUpdating = false;
+        state.operationErrorMessage = '';
+        state.updateKey += 1;
+      })
+      .addCase(updateCert.pending, (state, action) => {
+        state.isUpdating = true;
+      })
+      .addCase(updateCert.rejected, (state, action) => {
+        state.isUpdating = false;
+        state.operationErrorMessage =
+          'Updating failed with message: ' + action.error.message;
       });
   },
 });
 
-export const { clearDeletedIds } = certSlice.actions;
+export const { clearDeletedIds, incUpdateKey } = certSlice.actions;
 
 export default certSlice.reducer;

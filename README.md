@@ -80,3 +80,5 @@ pagination
 https://www.scaler.com/topics/react/pagination-in-react/
 
 https://github.com/AdeleD/react-paginate
+
+https://www.npmjs.com/package/react-tag-input

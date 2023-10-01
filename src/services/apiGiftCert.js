@@ -42,3 +42,17 @@ export async function deleteCertApi(id, jwt) {
   if (!res.ok) throw Error('Error deleting certificate with id ' + id);
   return;
 }
+
+export async function updateCertApi(id, fields, jwt) {
+  const requestOptions = {
+    method: 'PUT',
+    headers: {
+      Authorization: 'Bearer ' + jwt,
+    },
+  };
+  const res = await fetch(
+    `${baseUrl}/GiftCertificates/${id}?` + new URLSearchParams(fields),
+    requestOptions,
+  );
+  if (!res.ok) throw Error('Error updating certificate with id ' + id);
+}

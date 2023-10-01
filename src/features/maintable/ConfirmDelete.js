@@ -1,18 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../ui/Button';
 import { deleteCert } from '../certificate/certSlice';
-import { useSearchParams } from 'react-router-dom';
 
 function ConfimDelete({ id, onCloseModal }) {
   const dispatch = useDispatch();
-  const jwt = useSelector((state) => state.user.jwtToken);
-
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  console.log(jwt);
 
   function handleConfirm() {
-    dispatch(deleteCert({ certId: id, jwt }));
+    dispatch(deleteCert({ certId: id }));
     onCloseModal();
     // const paramsObj = Object.fromEntries(searchParams);
     // setSearchParams({ ...paramsObj, r: id });

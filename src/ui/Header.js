@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../features/user/userSlice';
+import Button from './Button';
 
 function Header() {
   const userName = useSelector((state) => state.user.userName);
@@ -18,12 +19,7 @@ function Header() {
         <div className="flex items-center">
           <span className="mx-4 font-semibold text-stone-400">Admin UI</span>
 
-          <button
-            className="m-4 h-8 rounded-md bg-blue-800 px-3 py-1 font-semibold text-blue-100"
-            hidden={!userName}
-          >
-            Add new
-          </button>
+          <Button color="blue">Add new</Button>
         </div>
         {userName ? (
           <div className="flex items-center gap-2 font-semibold text-stone-300">

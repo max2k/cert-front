@@ -57,5 +57,18 @@ export function validateEmail(input) {
 }
 
 export function validatePassword(input) {
-  return input.length > 3 && input.length < 30;
+  return lengthValidator(input, 3, 30);
+}
+
+export function lengthValidator(input, min, max) {
+  if (!input) return false;
+  return input.length > min && input.length < max;
+}
+
+export function numericRangeValidator(input, min, max) {
+  if (!input) return false;
+  if (isNaN(input)) return false;
+  const convertedVal = Number.parseFloat(input);
+  if (!convertedVal) return false;
+  return convertedVal >= min && convertedVal <= max;
 }
