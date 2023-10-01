@@ -24,7 +24,9 @@ export const updateCert = createAsyncThunk(
   async function ({ certId, fields }, thunkAPI) {
     try {
       const jwt = thunkAPI.getState().user.jwtToken;
-      await updateCertApi(certId, fields, jwt);
+      const tags = fields.tags.map((item) => item.text).join(',');
+      console.log(tags);
+      await updateCertApi(certId, { ...fields, tags }, jwt);
       return certId;
     } catch (error) {
       console.log(error);
@@ -39,27 +41,17 @@ export const updateCert = createAsyncThunk(
 const initialState = {
   isDeleting: false,
   isUpdating: false,
-  updateKey: 1,
-  deletedIds: [],
   operationErrorMessage: '',
 };
 
 const certSlice = createSlice({
   name: 'cert',
   initialState,
-  reducers: {
-    clearDeletedIds(state, action) {
-      state.deletedIds = [];
-    },
-    incUpdateKey(state, action) {
-      state.updateKey += 1;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(deleteCert.fulfilled, (state, action) => {
         state.isDeleting = false;
-        state.deletedIds = [...state.deletedIds, action.payload];
         state.operationErrorMessage = '';
       })
       .addCase(deleteCert.pending, (state, action) => {
@@ -73,7 +65,6 @@ const certSlice = createSlice({
       .addCase(updateCert.fulfilled, (state, action) => {
         state.isUpdating = false;
         state.operationErrorMessage = '';
-        state.updateKey += 1;
       })
       .addCase(updateCert.pending, (state, action) => {
         state.isUpdating = true;
@@ -85,7 +76,5 @@ const certSlice = createSlice({
       });
   },
 });
-
-export const { clearDeletedIds, incUpdateKey } = certSlice.actions;
 
 export default certSlice.reducer;

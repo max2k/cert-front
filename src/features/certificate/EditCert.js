@@ -4,7 +4,8 @@ import TagInput from './TagInput';
 import Button from '../../ui/Button';
 import { validateInput, newErrorState } from './validators';
 import { useDispatch } from 'react-redux';
-import { incUpdateKey, updateCert } from './certSlice';
+import { useRevalidator } from 'react-router-dom';
+import { updateCert } from './certSlice';
 
 function EditCert({ row, onCloseModal }) {
   const { id, name, description, price, tags, duration } = row;
@@ -18,6 +19,7 @@ function EditCert({ row, onCloseModal }) {
   });
 
   const dispatch = useDispatch();
+  const revaidator = useRevalidator();
 
   function handleOnChange(e) {
     if (!e.target.value) return;
@@ -41,7 +43,7 @@ function EditCert({ row, onCloseModal }) {
     console.log(changedState);
     dispatch(updateCert({ certId: id, fields: changedState })).then(() => {
       onCloseModal();
-      dispatch(incUpdateKey());
+      revaidator.revalidate();
     });
   }
 

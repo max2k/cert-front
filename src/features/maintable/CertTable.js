@@ -6,15 +6,12 @@ import TableRow from './TableRow';
 import PageSizeSelector from './PageSizeSelector';
 
 import FirstRowCell, { firstRowStyle } from './FirstRowCell';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { clearError } from '../error/errorSlice';
 
-function CertTable({ updateKey }) {
+function CertTable() {
   const { content, number, totalPages } = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
-  const revalidator = useRevalidator();
-
-  const deletedIds = useSelector((state) => state.cert.deletedIds);
 
   const dispatch = useDispatch();
 
@@ -26,10 +23,7 @@ function CertTable({ updateKey }) {
 
   return (
     <>
-      <div
-        className="grid grid-cols-[1fr_1fr_2fr_2fr_1fr_2fr]  divide-x-2 divide-y-2 border-4 border-stone-800"
-        key={updateKey}
-      >
+      <div className="grid grid-cols-[1fr_1fr_2fr_2fr_1fr_2fr]  divide-x-2 divide-y-2 border-4 border-stone-800">
         <FirstRowCell title="DateTime" fieldName="createDate" />
         <FirstRowCell title="Title" fieldName="name" />
         <div className={firstRowStyle}>Tags</div>
@@ -37,11 +31,9 @@ function CertTable({ updateKey }) {
         <FirstRowCell title="Price" fieldName="price" addStyle="text-center" />
 
         <div className={firstRowStyle}> Actions</div>
-        {content
-          .filter((row) => !deletedIds.includes(row.id))
-          .map((row) => (
-            <TableRow tableRow={row} key={row.id + updateKey} />
-          ))}
+        {content.map((row) => (
+          <TableRow tableRow={row} key={row.id} />
+        ))}
       </div>
       <div className="grid grid-cols-[1fr_10fr_1fr] items-center">
         <div></div>
