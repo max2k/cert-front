@@ -6,13 +6,16 @@ import { validateInput, newErrorState } from './validators';
 import { useDispatch } from 'react-redux';
 import { useRevalidator } from 'react-router-dom';
 import { updateCert } from './certSlice';
+import TextOrChild from '../../ui/TextOrChild';
 
-function EditCert({ row, onCloseModal }) {
+function EditCert({ row, onCloseModal, type }) {
   const { id, name, description, price, tags, duration } = row;
+
+  const isViewDialog = type === 'View';
 
   const [changedState, setChangedState] = useState({});
   const [errorState, setErrorState] = useState({
-    title: '',
+    name: '',
     description: '',
     duration: '',
     price: '',
@@ -47,7 +50,7 @@ function EditCert({ row, onCloseModal }) {
     });
   }
 
-  const labelStyle = 'mx-2';
+  const labelStyle = 'mx-2 font-semibold';
 
   return (
     <>
@@ -56,64 +59,85 @@ function EditCert({ row, onCloseModal }) {
           Title
         </label>
 
-        <div>
-          <input
-            className="w-full border-2"
-            type="text"
-            name="name"
-            defaultValue={name}
-            onChange={handleOnChange}
-          />
-          <ErrorLine message={errorState.title} />
-        </div>
+        <TextOrChild text={isViewDialog && name}>
+          <div>
+            <input
+              className="w-full border-2 read-only:border-0"
+              type="text"
+              name="name"
+              defaultValue={name}
+              onChange={handleOnChange}
+            />
+            <ErrorLine message={errorState.name} />
+          </div>
+        </TextOrChild>
+
         <label className={labelStyle} htmlFor="decription">
           Description
         </label>
-        <div>
-          <textarea
-            className="h-24 w-full border-2 align-top"
-            type="text"
-            name="description"
-            defaultValue={description}
-            onChange={handleOnChange}
-          ></textarea>
-          <ErrorLine message={errorState.description} />
-        </div>
+
+        <TextOrChild text={isViewDialog && description}>
+          <div>
+            <textarea
+              className="h-24 w-full border-2 align-top"
+              type="text"
+              name="description"
+              defaultValue={description}
+              onChange={handleOnChange}
+            ></textarea>
+            <ErrorLine message={errorState.description} />
+          </div>
+        </TextOrChild>
+
         <label className={labelStyle} htmlFor="duration">
           Duration
         </label>
-        <div>
-          <input
-            className="w-full border-2"
-            type="text"
-            name="duration"
-            defaultValue={duration}
-            onChange={handleOnChange}
-          />
-          <ErrorLine message={errorState.duration} />
-        </div>
+
+        <TextOrChild text={isViewDialog && duration}>
+          <div>
+            <input
+              className="w-full border-2"
+              type="text"
+              name="duration"
+              defaultValue={duration}
+              onChange={handleOnChange}
+            />
+            <ErrorLine message={errorState.duration} />
+          </div>
+        </TextOrChild>
+
         <label className={labelStyle} htmlFor="price">
           Price
         </label>
-        <div>
-          <input
-            className="w-full border-2"
-            type="text"
-            name="price"
-            defaultValue={price}
-            onChange={handleOnChange}
-          />
-          <ErrorLine message={errorState.price} />
-        </div>
+
+        <TextOrChild text={isViewDialog && price}>
+          <div>
+            <input
+              className="w-full border-2"
+              type="text"
+              name="price"
+              defaultValue={price}
+              onChange={handleOnChange}
+            />
+            <ErrorLine message={errorState.price} />
+          </div>
+        </TextOrChild>
+
         <label className={labelStyle} htmlFor="tags">
           Tags
         </label>
-        <TagInput inputTags={tags} onChange={handleTagChange} />
+        <TextOrChild
+          text={isViewDialog && tags.map((tag) => tag.name).join(', ')}
+        >
+          <TagInput inputTags={tags} onChange={handleTagChange} />
+        </TextOrChild>
       </div>
       <div className="mt-2 text-center">
-        <Button color="blue" onClick={handleOnSave}>
-          Save
-        </Button>
+        {!isViewDialog && (
+          <Button color="blue" onClick={handleOnSave}>
+            Save
+          </Button>
+        )}
         <Button color="stone" onClick={onCloseModal}>
           Cancel
         </Button>

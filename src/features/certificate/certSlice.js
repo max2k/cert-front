@@ -24,9 +24,9 @@ export const updateCert = createAsyncThunk(
   async function ({ certId, fields }, thunkAPI) {
     try {
       const jwt = thunkAPI.getState().user.jwtToken;
-      const tags = fields.tags.map((item) => item.text).join(',');
-      console.log(tags);
-      await updateCertApi(certId, { ...fields, tags }, jwt);
+      if (fields.tags)
+        fields.tags = fields.tags.map((item) => item.text).join(',');
+      await updateCertApi(certId, fields, jwt);
       return certId;
     } catch (error) {
       console.log(error);
@@ -36,6 +36,11 @@ export const updateCert = createAsyncThunk(
       throw Error('Deleting certificate failed');
     }
   },
+);
+
+export const createCert = createAsyncThunk(
+  'cert/create',
+  async function ({ fields }) {},
 );
 
 const initialState = {

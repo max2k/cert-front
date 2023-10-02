@@ -19,9 +19,15 @@ function TableRow({ tableRow }) {
       <div className={`${baseStyle} text-center`}>{price}</div>
       <div className={baseStyle}>
         <Modal>
-          <Button color="blue" disabled={!isLogged}>
-            View
-          </Button>
+          <Modal.Open opens="view">
+            <Button color="blue" disabled={!isLogged}>
+              View
+            </Button>
+          </Modal.Open>
+          <Modal.Window name="view" title={`View element ${id}`}>
+            <EditCert row={tableRow} type="View" />
+          </Modal.Window>
+
           <Modal.Open opens="edit">
             <Button color="yellow" disabled={!isLogged}>
               Edit
