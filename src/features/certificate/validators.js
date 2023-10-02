@@ -3,7 +3,7 @@ import { lengthValidator, numericRangeValidator } from '../../utils/helpers';
 const validators = {
   name: {
     validate: (input) => lengthValidator(input, 6, 30),
-    errorMessage: 'Description lenght shoud be between 6 and 30 chars',
+    errorMessage: 'Name lenght shoud be between 6 and 30 chars',
   },
   description: {
     validate: (input) => lengthValidator(input, 12, 1000),
@@ -28,4 +28,13 @@ export function validateInput(target) {
 
 export function newErrorState(name, errorState) {
   return { ...errorState, [name]: validators[name].errorMessage };
+}
+
+export function setErrorsForRequired(errrState) {
+  return {
+    ...errrState,
+    name: validators.name.errorMessage,
+    description: validators.description.errorMessage,
+    price: validators.price.errorMessage,
+  };
 }

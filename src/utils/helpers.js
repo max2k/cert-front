@@ -72,3 +72,10 @@ export function numericRangeValidator(input, min, max) {
   if (!convertedVal) return false;
   return convertedVal >= min && convertedVal <= max;
 }
+
+export function isAllFieldsEmpty(object) {
+  for (const key in object) {
+    if (object[key] !== '') return false;
+  }
+  return true;
+}

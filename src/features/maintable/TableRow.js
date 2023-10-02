@@ -3,12 +3,19 @@ import Modal from '../../ui/Modal';
 import { formatDate2 } from '../../utils/helpers';
 import ConfimDelete from './ConfirmDelete';
 import EditCert from '../certificate/EditCert';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateCert } from '../certificate/certSlice';
 
 function TableRow({ tableRow }) {
   const { createDate, name, description, price, tags, id } = tableRow;
   const isLogged = useSelector((state) => state.user.jwtToken !== '');
   const baseStyle = 'p-2 bg-stone-100 border-stone-300';
+
+  const dispatch = useDispatch();
+
+  function handleOnSave(changedState) {
+    return dispatch(updateCert({ certId: id, fields: changedState }));
+  }
 
   return (
     <>
@@ -20,9 +27,7 @@ function TableRow({ tableRow }) {
       <div className={baseStyle}>
         <Modal>
           <Modal.Open opens="view">
-            <Button color="blue" disabled={!isLogged}>
-              View
-            </Button>
+            <Button color="blue">View</Button>
           </Modal.Open>
           <Modal.Window name="view" title={`View element ${id}`}>
             <EditCert row={tableRow} type="View" />
@@ -34,7 +39,7 @@ function TableRow({ tableRow }) {
             </Button>
           </Modal.Open>
           <Modal.Window name="edit" title={`Edit element ${id}`}>
-            <EditCert row={tableRow} />
+            <EditCert row={tableRow} onSaveAction={handleOnSave} />
           </Modal.Window>
 
           <Modal.Open opens="delete">

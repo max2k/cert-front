@@ -1,5 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { deleteCertApi, updateCertApi } from '../../services/apiGiftCert';
+import {
+  createCertApi,
+  deleteCertApi,
+  updateCertApi,
+} from '../../services/apiGiftCert';
 import { setError } from '../error/errorSlice';
 
 export const deleteCert = createAsyncThunk(
@@ -29,9 +33,10 @@ export const updateCert = createAsyncThunk(
       await updateCertApi(certId, fields, jwt);
       return certId;
     } catch (error) {
-      console.log(error);
       thunkAPI.dispatch(
-        setError('Deleting failed with message:' + error.message),
+        setError(
+          `Deleting failed with code ${error.code} message: ${error.message}`,
+        ),
       );
       throw Error('Deleting certificate failed');
     }
@@ -40,12 +45,28 @@ export const updateCert = createAsyncThunk(
 
 export const createCert = createAsyncThunk(
   'cert/create',
-  async function ({ fields }) {},
+  async function (fields, thunkAPI) {
+    try {
+      if (fields.tags)
+        fields.tags = fields.tags.map((item) => ({ id: -1, name: item.text }));
+      console.log(fields);
+      const jwt = thunkAPI.getState().user.jwtToken;
+      await createCertApi(JSON.stringify(fields), jwt);
+    } catch (error) {
+      thunkAPI.dispatch(
+        setError(
+          `Creating failed with code ${error.code} message: ${error.message}`,
+        ),
+      );
+      throw Error('Create certificate failed');
+    }
+  },
 );
 
 const initialState = {
   isDeleting: false,
   isUpdating: false,
+  isCreating: false,
   operationErrorMessage: '',
 };
 
@@ -76,6 +97,18 @@ const certSlice = createSlice({
       })
       .addCase(updateCert.rejected, (state, action) => {
         state.isUpdating = false;
+        state.operationErrorMessage =
+          'Updating failed with message: ' + action.error.message;
+      })
+      .addCase(createCert.fulfilled, (state, action) => {
+        state.isCreating = false;
+        state.operationErrorMessage = '';
+      })
+      .addCase(createCert.pending, (state, action) => {
+        state.isCreating = true;
+      })
+      .addCase(createCert.rejected, (state, action) => {
+        state.isCreating = false;
         state.operationErrorMessage =
           'Updating failed with message: ' + action.error.message;
       });

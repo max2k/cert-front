@@ -2,26 +2,47 @@ import { useState } from 'react';
 import ErrorLine from '../../ui/ErrorLine';
 import TagInput from './TagInput';
 import Button from '../../ui/Button';
-import { validateInput, newErrorState } from './validators';
-import { useDispatch } from 'react-redux';
+import {
+  validateInput,
+  newErrorState,
+  setErrorsForRequired,
+} from './validators';
 import { useRevalidator } from 'react-router-dom';
-import { updateCert } from './certSlice';
 import TextOrChild from '../../ui/TextOrChild';
+import { isAllFieldsEmpty } from '../../utils/helpers';
 
-function EditCert({ row, onCloseModal, type }) {
-  const { id, name, description, price, tags, duration } = row;
+function EditCert({ row, onCloseModal, type, onSaveAction }) {
+  if (!row)
+    row = {
+      name: '',
+      description: '',
+      price: 0,
+      duration: 100,
+      tags: [],
+    };
+  const { name, description, price, tags, duration } = row;
 
   const isViewDialog = type === 'View';
+  const isCreateDialog = type === 'Create';
 
-  const [changedState, setChangedState] = useState({});
-  const [errorState, setErrorState] = useState({
+  let initChangedState = {};
+
+  if (isCreateDialog) initChangedState = { price: 0, duration: 100 };
+
+  const [changedState, setChangedState] = useState(initChangedState);
+
+  let initialState = {
     name: '',
     description: '',
     duration: '',
     price: '',
-  });
+  };
+  if (isCreateDialog) initialState = setErrorsForRequired(initialState);
 
-  const dispatch = useDispatch();
+  const [errorState, setErrorState] = useState(initialState);
+
+  const isAnyInputError = !isAllFieldsEmpty(errorState);
+
   const revaidator = useRevalidator();
 
   function handleOnChange(e) {
@@ -43,10 +64,9 @@ function EditCert({ row, onCloseModal, type }) {
   }
 
   function handleOnSave() {
-    console.log(changedState);
-    dispatch(updateCert({ certId: id, fields: changedState })).then(() => {
-      onCloseModal();
+    onSaveAction(changedState).then(() => {
       revaidator.revalidate();
+      onCloseModal();
     });
   }
 
@@ -66,6 +86,7 @@ function EditCert({ row, onCloseModal, type }) {
               type="text"
               name="name"
               defaultValue={name}
+              placeholder="Certificate name"
               onChange={handleOnChange}
             />
             <ErrorLine message={errorState.name} />
@@ -83,6 +104,7 @@ function EditCert({ row, onCloseModal, type }) {
               type="text"
               name="description"
               defaultValue={description}
+              placeholder="Certificate description"
               onChange={handleOnChange}
             ></textarea>
             <ErrorLine message={errorState.description} />
@@ -99,6 +121,7 @@ function EditCert({ row, onCloseModal, type }) {
               className="w-full border-2"
               type="text"
               name="duration"
+              placeholder="Certificate duration"
               defaultValue={duration}
               onChange={handleOnChange}
             />
@@ -117,6 +140,7 @@ function EditCert({ row, onCloseModal, type }) {
               type="text"
               name="price"
               defaultValue={price}
+              placeholder="Certificate price"
               onChange={handleOnChange}
             />
             <ErrorLine message={errorState.price} />
@@ -134,8 +158,12 @@ function EditCert({ row, onCloseModal, type }) {
       </div>
       <div className="mt-2 text-center">
         {!isViewDialog && (
-          <Button color="blue" onClick={handleOnSave}>
-            Save
+          <Button
+            color="blue"
+            onClick={handleOnSave}
+            disabled={isAnyInputError}
+          >
+            {isCreateDialog ? 'Create' : 'Save'}
           </Button>
         )}
         <Button color="stone" onClick={onCloseModal}>

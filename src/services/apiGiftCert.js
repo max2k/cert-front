@@ -56,3 +56,16 @@ export async function updateCertApi(id, fields, jwt) {
   );
   if (!res.ok) throw Error('Error updating certificate with id ' + id);
 }
+
+export async function createCertApi(newCertJson, jwt) {
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + jwt,
+      'Content-type': 'application/json',
+    },
+    body: newCertJson,
+  };
+  const res = await fetch(`${baseUrl}/GiftCertificates`, requestOptions);
+  if (!res.ok) throw Error('Error updating certificate');
+}
